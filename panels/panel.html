@@ -1,8 +1,10 @@
 <html>
     <body>
-        <script src="https://unpkg.com/@patricksurry/g3/dist/g3-examples.min.js"></script>
+<!--        <script src="https://unpkg.com/@patricksurry/g3/dist/g3-examples.min.js"></script> -->
+        <script src="./g3-examples.min.js"></script>
         <script>
-g3.panel('DHC2FlightPanel').interval(250).url('/metrics/fake.json')('body');
+// g3.panel('DHC2FlightPanel').interval(250).url('/metrics/fake.json')('body');
+g3.panel('DHC2FlightPanel').interval(250).url('/metrics/xplane.json')('body');
         </script>
     </body>
 </html>

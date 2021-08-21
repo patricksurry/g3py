@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from xplane.fetch import pollMetrics
+
 
 from faketimeseries import (
     timeGenerator, datetimeGenerator,
@@ -11,10 +13,11 @@ from faketimeseries import (
 metricGenerators = dict(
     time=timeGenerator(),
     date=datetimeGenerator(),
-    atmosphericPressure=forceSeriesGenerator(955, 1075),
+    pressureSetting=forceSeriesGenerator(955, 1075),
     altitude=forceSeriesGenerator(0, 30000, fmax=0.001),
     pitch=forceSeriesGenerator(-25, 25),
     roll=forceSeriesGenerator(-25, 25),
+    slip=forceSeriesGenerator(-20,20),
     heading=forceSeriesGenerator(0, 360, wrap=True),
     radialDeviation=forceSeriesGenerator(-10, 10),
     radialVOR=forceSeriesGenerator(0, 360, wrap=True),
@@ -47,6 +50,12 @@ app.mount("/panels", StaticFiles(directory="panels"), name="static")
 @app.get("/metrics/fake.json")
 def metrics_fake():
     return {k: next(v) for (k, v) in metricGenerators.items()}
+
+
+# Serve live metrics from xplane
+@app.get("/metrics/xplane.json")
+def metrics_xplane():
+    return pollMetrics()
 
 
 # Serve live metrics from your actual source

@@ -1,0 +1,31 @@
+{
+    "sim/cockpit2/gauges/indicators/pitch_vacuum_deg_pilot": "pitch",
+    "sim/cockpit2/gauges/indicators/heading_vacuum_deg_mag_pilot": "heading",
+    "sim/cockpit2/gauges/indicators/roll_vacuum_deg_pilot": "roll",
+    "sim/cockpit2/gauges/indicators/slip_deg": "slip",
+    "sim/cockpit2/gauges/indicators/altitude_ft_pilot": "altitude",
+    "sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot": "pressureSetting",
+    "sim/cockpit2/gauges/indicators/airspeed_kts_pilot": "airspeed",
+    "sim/cockpit2/gauges/indicators/vvi_fpm_pilot": "verticalSpeed",
+    "sim/cockpit2/gauges/indicators/turn_rate_heading_deg_pilot": "turnrate",
+    "sim/cockpit2/gauges/indicators/compass_heading_deg_mag": "compass",
+
+    "sim/cockpit2/engine/indicators/fuel_pressure_psi": "fuelPressure",
+    "sim/cockpit2/engine/indicators/oil_pressure_psi": "oilPressure",
+    "sim/cockpit2/engine/indicators/oil_temperature_deg_C": "oilTemperature",
+    "sim/cockpit2/engine/indicators/engine_speed_rpm": "engineRPM",
+    "sim/cockpit2/engine/indicators/MPR_in_hg": "manifoldPressure",
+    "sim/cockpit2/engine/indicators/CHT_deg_C": "cylinderHeadTemp",
+
+    "sim/cockpit2/radios/actuators/nav1_course_deg_mag_pilot": "radialVOR",
+    "sim/cockpit2/radios/indicators/nav1_relative_bearing_deg": "radialDeviation",
+    "sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot": "toFrVOR",
+    "sim/cockpit2/radios/actuators/adf1_card_heading_deg_mag_pilot": "headingADF",
+    "sim/cockpit2/radios/indicators/adf1_relative_bearing_deg": "relativeADF",
+
+    "sim/cockpit2/fuel/fuel_tank_selector": "fuelSelector",
+    "sim/cockpit2/fuel/fuel_quantity": "fuelQuantity",
+
+    "sim/time/zulu_time_sec": "midnightSecondsUTC",
+    "sim/time/local_time_sec": "midnightSecondsLocal"
+}
