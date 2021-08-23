@@ -1,0 +1,120 @@
+# Maps xplane datarefs to G3 gauge metrics
+# For each metric, specify the g3 metric name (or list of names),
+# the dref location in xplane (see https://developer.x-plane.com/datarefs/)
+# and optionally the xplane unit (supported by https://github.com/convert-units/convert-units)
+# which will allow G3 to convert to the appropriate unit for display
+# Finally, an optional fx lets you transform the input value to the metric.
+
+# Interally, xplane connect (https://github.com/nasa/XPlaneConnect/)
+# fetches drefs as tuples, which are then matched to the metric name(s) provided.
+# e.g. to map multiple fuel quantities to the fuel_quantity dref, use a list as below
+
+# Transformations via fx are applied to each element of the dref in turn, before mapping
+# to metrics.  Provide a python expression where x is the input value.  You can also refer
+# to any mapped dref as data['sim/time/zulu_time_sec'][0] - note the dictionary is
+# indexed by dref name, and returns a tuple of values, even if only length 1.
+
+metrics:
+  - metric: pitch
+    dref: sim/cockpit2/gauges/indicators/pitch_vacuum_deg_pilot
+    unit: deg
+
+  - metric: heading
+    dref: sim/cockpit2/gauges/indicators/heading_vacuum_deg_mag_pilot
+    unit: deg
+
+  - metric: roll
+    dref: sim/cockpit2/gauges/indicators/roll_vacuum_deg_pilot
+    unit: deg
+
+  - metric: slip
+    dref: sim/cockpit2/gauges/indicators/slip_deg
+    unit: deg
+
+  - metric: altitude
+    dref: sim/cockpit2/gauges/indicators/altitude_ft_pilot
+    unit: ft
+
+  - metric: pressureSetting
+    dref: sim/cockpit2/gauges/actuators/barometer_setting_in_hg_pilot
+    unit: inHg
+
+  - metric: airspeed
+    dref: sim/cockpit2/gauges/indicators/airspeed_kts_pilot
+    unit: knot
+
+  - metric: verticalSpeed
+    dref: sim/cockpit2/gauges/indicators/vvi_fpm_pilot
+    unit: ft/min
+
+  - metric: turnrate
+    dref: sim/cockpit2/gauges/indicators/turn_rate_heading_deg_pilot
+    unit: deg
+
+  - metric: compass
+    dref: sim/cockpit2/gauges/indicators/compass_heading_deg_mag
+    unit: deg
+
+  - metric: fuelPressure
+    dref: sim/cockpit2/engine/indicators/fuel_pressure_psi
+    unit: psi
+
+  - metric: oilPressure
+    dref: sim/cockpit2/engine/indicators/oil_pressure_psi
+    unit: psi
+
+  - metric: oilTemperature
+    dref: sim/cockpit2/engine/indicators/oil_temperature_deg_C
+    unit: C
+
+  - metric: engineRPM
+    dref: sim/cockpit2/engine/indicators/engine_speed_rpm
+    unit: rpm
+
+  - metric: manifoldPressure
+    dref: sim/cockpit2/engine/indicators/MPR_in_hg
+    unit: inHg
+
+  - metric: cylinderHeadTemp
+    dref: sim/cockpit2/engine/indicators/CHT_deg_C
+    unit: C
+
+  - metric: radialVOR
+    dref: sim/cockpit2/radios/actuators/nav1_course_deg_mag_pilot
+    unit: deg
+
+  - metric: radialDeviation
+    dref: sim/cockpit2/radios/indicators/nav1_relative_bearing_deg
+    unit: deg
+
+  # nav1_flag_from_to_pilot: 0 is flag, 1 is to, 2 is from.
+  - metric: toFrVOR
+    dref: sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot
+    fx: x - 1    # G3 wants 0 = to, 1 = from
+
+  - metric: reliabilityVOR
+    dref: sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot
+    fx: x == 0    # G3 wants 1 if unreliable
+
+  - metric: headingADF
+    dref: sim/cockpit2/radios/actuators/adf1_card_heading_deg_mag_pilot
+    unit: deg
+
+  - metric: relativeADF
+    dref: sim/cockpit2/radios/indicators/adf1_relative_bearing_deg
+    unit: deg
+
+  - metric: fuelSelector
+    dref: sim/cockpit2/fuel/fuel_tank_selector
+
+  - metric: [fuelFront, fuelCenter, fuelRear]
+    dref: sim/cockpit2/fuel/fuel_quantity
+    unit: gal
+
+  - metric: midnightSecondsUTC
+    dref: sim/time/zulu_time_sec
+    unit: s
+
+  - metric: midnightSecondsLocal
+    dref: sim/time/local_time_sec
+    unit: s

@@ -1,0 +1,13 @@
+name: g3py
+dependencies:
+  - pip
+  - python=3.6
+  - pip:
+    - fastapi
+    - uvicorn
+    - aiofiles
+    - ruamel.yaml
+    - flake8
+    - flake8-black
+    - mypy
+
