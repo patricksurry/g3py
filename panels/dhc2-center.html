@@ -1,0 +1,26 @@
+<html>
+    <body>
+<!--        <script src="https://unpkg.com/@patricksurry/g3/dist/g3-examples.min.js"></script> -->
+        <script src="./g3-examples.min.js"></script>
+        <script>
+
+g3.panel()
+    .width(1200)
+    .height(1200)
+    .interval(250)
+    .url('/metrics/xplane.json')
+    .append(
+        g3.put().x(147).y(247).scale(1.36).append(g3.gauge('suctionPressureDHC2')),
+        g3.put().x(537).y(249).scale(1.36).append(g3.gauge('fuelDHC2')),
+        g3.put().x(931).y(258).scale(1.36).append(g3.gauge('oilFuelDHC2')),
+        g3.put().x(215).y(810).scale(2).append(g3.gauge('manifoldPressureDHC2')),
+        g3.put().x(870).y(820).scale(2).append(g3.gauge('engineTachometerDHC2')),
+    //    g3.put().x(160).y(680).scale(1.28).append(g3.gauge('carbMixtureTempDHC2')),
+    //    g3.put().x(480).y(680).scale(1.28).append(g3.gauge('cylinderHeadTempDHC2')),
+    //    g3.put().x(160).y(1000).scale(1.28).append(g3.gauge('voltmeterDHC2')),
+    //    g3.put().x(480).y(1000).scale(1.28).append(g3.gauge('ammeterDHC2')),
+)('body');
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,43 @@
+<html>
+    <body>
+<!--        <script src="https://unpkg.com/@patricksurry/g3/dist/g3-examples.min.js"></script> -->
+        <script src="./g3-examples.min.js"></script>
+        <script>
+/* 1024x768 stretched aspect ratio, DHC2 flight panel */
+g3.panel()
+    .width(1024)
+    .height(768)
+    .scale(1, 1.35)
+    .interval(250)
+    .url('/metrics/xplane.json')
+    .append(
+    //        'airspeedDHC2', 'attitudeDHC2', 'altitudeDHC2', 'VORDHC2',
+    //        'turnCoordinatorDHC2', 'headingDHC2', 'vsiDHC2', 'ADFDHC2',
+
+        g3.put().x(111).y(138).scale(0.9).append(g3.gauge('airspeedDHC2')),
+        g3.put().x(377).y(138).scale(0.9).append(g3.gauge('attitudeDHC2')),
+        g3.put().x(645).y(138).scale(0.9).append(g3.gauge('altitudeDHC2')),
+        g3.put().x(910).y(139).scale(0.9).append(g3.gauge('VORDHC2')),
+
+        g3.put().x(111).y(430).scale(0.9).append(g3.gauge('turnCoordinatorDHC2')),
+        g3.put().x(375).y(433).scale(0.9).append(g3.gauge('headingDHC2')),
+        g3.put().x(643).y(433).scale(0.9).append(g3.gauge('vsiDHC2')),
+        g3.put().x(910).y(430).scale(0.9).append(g3.gauge('ADFDHC2')),
+
+/* // 720x400 square aspect
+        g3.put().x(78).y(95).scale(0.63).append(g3.gauge('airspeedDHC2')),
+        g3.put().x(265).y(95).scale(0.63).append(g3.gauge('attitudeDHC2')),
+        g3.put().x(453).y(95).scale(0.63).append(g3.gauge('altitudeDHC2')),
+        g3.put().x(640).y(95).scale(0.63).append(g3.gauge('VORDHC2')),
+
+        g3.put().x(78).y(300).scale(0.63).append(g3.gauge('turnCoordinatorDHC2')),
+        g3.put().x(264).y(303).scale(0.63).append(g3.gauge('headingDHC2')),
+        g3.put().x(452).y(303).scale(0.63).append(g3.gauge('vsiDHC2')),
+        g3.put().x(640).y(301).scale(0.63).append(g3.gauge('ADFDHC2')),
+*/
+
+)('body');
+
+        </script>
+    </body>
+</html>
