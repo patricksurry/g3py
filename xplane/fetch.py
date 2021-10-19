@@ -22,11 +22,9 @@ def pollMetrics():
         ks = k if isinstance(k, list) else [k]
         if 'fx' in m:
             vec = [eval(m['fx'], None, dict(x=v, data=data)) for v in vec]
-        kvs = zip(ks, vec)
-        if m.get('unit'):
-            d = {k: dict(value=v, unit=m['unit']) for (k, v) in kvs}
-        else:
-            d = dict(kvs)
+        unit = m.get('unit')
+        unit = f':{unit}' if unit else ''
+        d = {k + unit: v for (k, v) in zip(ks, vec)}
         metrics.update(d)
     return metrics
 

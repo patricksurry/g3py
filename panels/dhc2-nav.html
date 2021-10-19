@@ -1,7 +1,7 @@
 <html>
     <body>
 <!--        <script src="https://unpkg.com/@patricksurry/g3/dist/g3-examples.min.js"></script> -->
-        <script src="./g3-examples.min.js"></script>
+        <script src="./g3-contrib.min.js"></script>
         <script>
 /* 1024x768 stretched aspect ratio, DHC2 flight panel */
 g3.panel()
@@ -9,20 +9,21 @@ g3.panel()
     .height(768)
     .scale(1, 1.35)
     .interval(250)
-    .url('/metrics/xplane.json')
+//    .url('/metrics/xplane.json')
+    .url('/metrics/fake.json')
     .append(
     //        'airspeedDHC2', 'attitudeDHC2', 'altitudeDHC2', 'VORDHC2',
     //        'turnCoordinatorDHC2', 'headingDHC2', 'vsiDHC2', 'ADFDHC2',
 
-        g3.put().x(111).y(138).scale(0.9).append(g3.gauge('airspeedDHC2')),
-        g3.put().x(377).y(138).scale(0.9).append(g3.gauge('attitudeDHC2')),
-        g3.put().x(645).y(138).scale(0.9).append(g3.gauge('altitudeDHC2')),
-        g3.put().x(910).y(139).scale(0.9).append(g3.gauge('VORDHC2')),
+        g3.put().x(111).y(138).scale(0.9).append(g3.contrib.nav.airspeed.DHC2()),
+        g3.put().x(377).y(138).scale(0.9).append(g3.contrib.nav.attitude.generic()),
+        g3.put().x(645).y(138).scale(0.9).append(g3.contrib.nav.altitude.generic()),
+        g3.put().x(910).y(139).scale(0.9).append(g3.contrib.radionav.VOR.generic()),
 
-        g3.put().x(111).y(430).scale(0.9).append(g3.gauge('turnCoordinatorDHC2')),
-        g3.put().x(375).y(433).scale(0.9).append(g3.gauge('headingDHC2')),
-        g3.put().x(643).y(433).scale(0.9).append(g3.gauge('vsiDHC2')),
-        g3.put().x(910).y(430).scale(0.9).append(g3.gauge('ADFDHC2')),
+        g3.put().x(111).y(430).scale(0.9).append(g3.contrib.nav.turnCoordinator.generic()),
+        g3.put().x(375).y(433).scale(0.9).append(g3.contrib.nav.heading.generic()),
+        g3.put().x(643).y(433).scale(0.9).append(g3.contrib.nav.VSI.generic()),
+        g3.put().x(910).y(430).scale(0.9).append(g3.contrib.radionav.ADF.generic()),
 
 /* // 720x400 square aspect
         g3.put().x(78).y(95).scale(0.63).append(g3.gauge('airspeedDHC2')),
