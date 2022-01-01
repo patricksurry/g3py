@@ -20,7 +20,21 @@ For instance, a minimal panel would look like `./panels/panel.html` containing:
     <body>
         <script src="https://unpkg.com/@patricksurry/g3/dist/g3-contrib.min.js"></script>
         <script>
-g3.panel('DHC2FlightPanel').interval(250).url('/metrics/fake.json')('body');
+g3.panel()
+    .interval(250)
+    .url('/metrics/fake.json')  // .url('/metrics/xplane.json')
+    .append(
+        g3.put().x(128).y(196).scale(0.9).append(g3.contrib.nav.airspeed.DHC2()),
+        g3.put().x(384).y(196).scale(0.9).append(g3.contrib.nav.attitude.generic()),
+        g3.put().x(640).y(196).scale(0.9).append(g3.contrib.nav.altitude.generic()),
+        g3.put().x(896).y(196).scale(0.9).append(g3.contrib.radionav.VOR.generic()),
+
+        g3.put().x(128).y(580).scale(0.9).append(g3.contrib.nav.turnCoordinator.generic()),
+        g3.put().x(384).y(580).scale(0.9).append(g3.contrib.nav.heading.generic()),
+        g3.put().x(640).y(580).scale(0.9).append(g3.contrib.nav.VSI.generic()),
+        g3.put().x(896).y(580).scale(0.9).append(g3.contrib.radionav.ADF.generic()),
+    )
+    ('body');
         </script>
     </body>
 </html>
