@@ -33,11 +33,14 @@ def fetchAll():
     with open(path.join(path.dirname(__file__), 'DataRefs.txt')) as f:
         drefs = [s.split()[0] for s in f.read().splitlines()[2:]]
 
-    with xpc.XPlaneConnect() as client:
-        vecs = client.getDREFs(drefs)
-        data = dict(zip(drefs, vecs))
+    metrics = dict()
+    for i in range(0, len(drefs), 256):
+        with xpc.XPlaneConnect() as client:
+            vecs = client.getDREFs(drefs[i:i+256])
+            data = dict(zip(drefs, vecs))
+            metrics.update(data)
 
-    return data
+    return metrics
 
 
 if __name__ == '__main__':
