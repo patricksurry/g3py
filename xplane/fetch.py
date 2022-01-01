@@ -34,9 +34,9 @@ def fetchAll():
         drefs = [s.split()[0] for s in f.read().splitlines()[2:]]
 
     metrics = dict()
-    for i in range(0, len(drefs), 256):
+    for i in range(0, len(drefs), 255):
         with xpc.XPlaneConnect() as client:
-            vecs = client.getDREFs(drefs[i:i+256])
+            vecs = client.getDREFs(drefs[i:i+255])
             data = dict(zip(drefs, vecs))
             metrics.update(data)
 
