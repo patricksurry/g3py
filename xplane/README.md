@@ -3,6 +3,9 @@ Illustrates an [X-Plane](https://www.x-plane.com/) adapter for
 fetching metrics from XPlane via NASA's
 [XPlaneConnect](https://github.com/nasa/XPlaneConnect/) plugin.
 
+First install the XPlaneConnect plugin in your XPlane folder as explained
+in the [README](https://github.com/nasa/XPlaneConnect/).
+
 This repo includes a copy of
 [xpc.py](https://github.com/nasa/XPlaneConnect/blob/master/Python3/src/xpc.py)
 which is XPlaneConnect's Python client.
@@ -11,6 +14,8 @@ Individual metrics from XPlane,
 called [datarefs](https://developer.x-plane.com/datarefs/),
 are mapped to G3 gauge metrics as described in mapping.yml,
 and supports both simple transformation and automated unit conversion.
+Note your XPlane installation also contains a full list of supported
+datarefs in `Resources/plugins/DataRefs.txt`.
 
 You can test your mapping by starting up XPlane
 and running this command from the parent folder.

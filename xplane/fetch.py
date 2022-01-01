@@ -29,5 +29,17 @@ def pollMetrics():
     return metrics
 
 
+def fetchAll():
+    drefs = [
+        s.split()[0]
+        for s in open('DataRefs.txt').read().splitlines()[2:]
+    ]
+    with xpc.XPlaneConnect() as client:
+        vecs = client.getDREFs(drefs)
+        data = dict(zip(drefs, vecs))
+    return data
+
+
 if __name__ == '__main__':
     print(json.dumps(pollMetrics(), indent=4, sort_keys=True))
+    json.dump(fetchAll(), open('datarefs.json', 'w'), indent=4, sort_keys=True)
