@@ -30,13 +30,13 @@ def pollMetrics():
 
 
 def fetchAll():
-    drefs = [
-        s.split()[0]
-        for s in open('DataRefs.txt').read().splitlines()[2:]
-    ]
+    with open(path.join(path.dirname(__file__), 'DataRefs.txt')) as f:
+        drefs = [s.split()[0] for s in f.read().splitlines()[2:]]
+
     with xpc.XPlaneConnect() as client:
         vecs = client.getDREFs(drefs)
         data = dict(zip(drefs, vecs))
+
     return data
 
 
