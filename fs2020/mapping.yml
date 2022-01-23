@@ -1,0 +1,8 @@
+# Maps FS2020 SimVars to gauges.  Metric units are auto-discovered,
+# or can be overridden by specifying a `unit` for the metric.
+# Raw simvar values can be transformed by specifying
+# a python expression as 'fx', where the raw value is passed as a variable `x`
+# See README.me for more details.
+metrics:
+  - metric: altitude
+    simvar: PLANE_ALTITUDE
