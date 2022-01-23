@@ -3,6 +3,7 @@ from . import xpc  # Copied from https://github.com/nasa/XPlaneConnect/blob/mast
 from ruamel.yaml import YAML
 
 import json
+from time import sleep
 from os import path
 
 
@@ -31,13 +32,18 @@ def pollMetrics():
 
 def fetchAll():
     with open(path.join(path.dirname(__file__), 'DataRefs.txt')) as f:
-        drefs = [s.split()[0] for s in f.read().splitlines()[2:]]
+        drefs = [s.split()[0] for s in f.read().splitlines()[2:] if s]
 
     metrics = dict()
-    for i in range(0, len(drefs), 255):
-        with xpc.XPlaneConnect() as client:
-            vecs = client.getDREFs(drefs[i:i+255])
-            data = dict(zip(drefs, vecs))
+    print(f"fetching all {len(drefs)} known datarefs")
+    chunksize=32
+    with xpc.XPlaneConnect() as client:
+        for i in range(0, len(drefs), chunksize):
+            #sleep(0.1)
+            chunk = drefs[i:i+chunksize] 
+            print(f"chunk@{i} with {len(chunk)} drefs, {chunk[0]} ...")
+            vecs = client.getDREFs(chunk)
+            data = dict(zip(chunk, vecs))
             metrics.update(data)
 
     return metrics

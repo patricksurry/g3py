@@ -3,6 +3,7 @@ dependencies:
   - pip
   - python=3.6
   - pip:
+    - simconnect
     - fastapi
     - uvicorn
     - aiofiles

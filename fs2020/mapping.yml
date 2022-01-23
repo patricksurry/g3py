@@ -5,52 +5,52 @@
 # See README.me for more details.
 metrics:
   - metric: heading
-    simvar: HEADING INDICATOR
+    simvar: HEADING_INDICATOR
 
   - metric: altitude
-    simvar: INDICATED ALTITUDE
+    simvar: INDICATED_ALTITUDE
 
   - metric: pressureSetting
-    simvar: BAROMETER PRESSURE
+    simvar: BAROMETER_PRESSURE
 
   - metric: pitch
-    simvar: ATTITUDE INDICATOR PITCH DEGREES
+    simvar: ATTITUDE_INDICATOR_PITCH_DEGREES
 
   - metric: roll
-    simvar: ATTITUDE INDICATOR BANK DEGREES
+    simvar: ATTITUDE_INDICATOR_BANK_DEGREES
 
   - metric: turnrate
-    simvar: TURN INDICATOR RATE
+    simvar: TURN_INDICATOR_RATE
 
   - metric: slip
-    simvar: TURN COORDINATOR BALL
+    simvar: TURN_COORDINATOR_BALL
 
   - metric: airspeed
-    simvar: AIRSPEED INDICATED
+    simvar: AIRSPEED_INDICATED
 
   - metric: verticalSpeed
-    simvar: VERTICAL SPEED
+    simvar: VERTICAL_SPEED
 
   - metric: compass
-    simvar: MAGNETIC COMPASS
+    simvar: MAGNETIC_COMPASS
 
   - metric: fuelPressure
-    simvar: ENG FUEL PRESSURE
+    simvar: "ENG_FUEL_PRESSURE:1"
 
   - metric: oilPressure
-    simvar: ENG OIL PRESSURE
+    simvar: "ENG_OIL_PRESSURE:1"
 
   - metric: oilTemperature
-    simvar: ENG OIL TEMPERATURE
+    simvar: "ENG_OIL_TEMPERATURE:1"
 
   - metric: engineRPM
-    simvar: "ENG N1 RPM:1"
+    simvar: "ENG_N1_RPM:1"
 
   - metric: manifoldPressure
-    simvar: "ENG MANIFOLD PRESSURE:1"
+    simvar: "ENG_MANIFOLD_PRESSURE:1"
 
   - metric: cylinderHeadTemp
-    simvar: "ENG CYLINDER HEAD TEMPERATURE:1"
+    simvar: "ENG_CYLINDER_HEAD_TEMPERATURE:1"
 
 
 todo:

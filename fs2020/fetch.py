@@ -14,7 +14,10 @@ with open(path.join(path.dirname(__file__), 'mapping.yml')) as f:
     mapping = yaml.load(f)['metrics']
 
 for m in mapping:
-    m['simvar'] = aq.find(m['simvar'])
+    sv = aq.find(m['simvar'])
+    if not sv:
+        print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
+    m['simvar'] = sv
 
 
 def pollMetrics():
@@ -23,7 +26,7 @@ def pollMetrics():
         if not m['simvar']:
             continue
         v = m['simvar'].get()
-        unit = m['simvar'].definitions[0][1]
+        unit = m['simvar'].definitions[0][1].decode('utf-8')
         if 'fx' in m:
             v = eval(m['fx'], None, dict(x=v))
         metrics[m['metric'] + ':' + unit] = v
