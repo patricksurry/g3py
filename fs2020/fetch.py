@@ -4,18 +4,33 @@ from ruamel.yaml import YAML
 from SimConnect import *
 
 
+yaml = YAML(typ='safe')
+
+mydir = path.dirname(__file__)
+with open(path.join(mydir, 'units.yml')) as f:
+    units = yaml.load(f)
+
+unitmap = {}
+for std, simunits in units.keys():
+    if not isinstance(simunits, list):
+        simunits = [simunits]
+    for u in simunits:
+        unitmap[u] = std
+
+with open(path.join(mydir, 'mapping.yml')) as f:
+    mapping = yaml.load(f)['metrics']
+
 # Create SimConnect link
 sm = SimConnect()
 # _time is cache length in milliseconds
 aq = AircraftRequests(sm, _time=100)
 
-yaml = YAML(typ='safe')
-with open(path.join(path.dirname(__file__), 'mapping.yml')) as f:
-    mapping = yaml.load(f)['metrics']
-
 for m in mapping:
     sv = aq.find(m['simvar'])
-    if not sv:
+    if sv:
+        unit = sv.definitions[0][1].decode('utf-8')
+        m['unit'] = unitmap.get(unit, unit)
+    else:
         print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
     m['simvar'] = sv
 
@@ -23,13 +38,13 @@ for m in mapping:
 def pollMetrics():
     metrics = {}
     for m in mapping:
-        if not m['simvar']:
+        sv = m['simvar']
+        if not sv:
             continue
-        v = m['simvar'].get()
-        unit = m['simvar'].definitions[0][1].decode('utf-8')
+        v = sv.get()
         if 'fx' in m:
             v = eval(m['fx'], None, dict(x=v))
-        metrics[m['metric'] + ':' + unit] = v
+        metrics[m['metric'] + ':' + m['unit']] = v
     return metrics
 
 

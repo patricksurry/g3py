@@ -24,6 +24,7 @@ metrics:
 
   - metric: slip
     simvar: TURN_COORDINATOR_BALL
+    #TODO unit: position
 
   - metric: airspeed
     simvar: AIRSPEED_INDICATED
@@ -39,6 +40,7 @@ metrics:
 
   - metric: oilPressure
     simvar: "ENG_OIL_PRESSURE:1"
+    #TODO unit: foot pounds => pounds per square foot?
 
   - metric: oilTemperature
     simvar: "ENG_OIL_TEMPERATURE:1"
@@ -54,7 +56,6 @@ metrics:
 
 
 todo:
-  #TODO: working out correct mapping for radialVOR and radialDeviation
   - metric: nav1obs
     dref: sim/cockpit2/radios/actuators/nav1_obs_deg_mag_pilot
 

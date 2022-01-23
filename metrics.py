@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from xplane.fetch import pollMetrics
+from xplane.fetch import pollMetrics as pollXPlane
+from fs2020.fetch import pollMetrics as pollFS2020
 
 
 from faketimeseries import (
@@ -55,7 +56,13 @@ def metrics_fake():
 # Serve live metrics from xplane
 @app.get("/metrics/xplane.json")
 def metrics_xplane():
-    return pollMetrics()
+    return pollXPlane()
+
+
+# Serve live metrics from xplane
+@app.get("/metrics/fs2020.json")
+def metrics_xplane():
+    return pollFS2020()
 
 
 # Serve live metrics from your actual source
