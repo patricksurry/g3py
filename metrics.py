@@ -1,71 +1,55 @@
+from typing import Dict, Any
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from xplane.fetch import pollMetrics as pollXPlane
-from fs2020.fetch import pollMetrics as pollFS2020
+from fastapi.middleware.cors import CORSMiddleware
 
+#import xplane.fetch as source
+#import fs2020.fetch as source
+import fakemetrics as source
 
-from faketimeseries import (
-    timeGenerator, datetimeGenerator,
-    forceSeriesGenerator, categoricalGenerator
-)
+from changedict import ChangeDict
 
-# Define random metrics timeseries corresponding to the example gauges
-
-metricGenerators = {
-    'time': timeGenerator(),
-    'date': datetimeGenerator(),
-    'pressureSetting': forceSeriesGenerator(955, 1075),
-    'altitude': forceSeriesGenerator(0, 30000, fmax=0.001),
-    'pitch': forceSeriesGenerator(-25, 25),
-    'roll': forceSeriesGenerator(-25, 25),
-    'slip': forceSeriesGenerator(-20,20),
-    'heading': forceSeriesGenerator(0, 360, wrap=True),
-    'radialDeviation': forceSeriesGenerator(-10, 10),
-    'radialVOR': forceSeriesGenerator(0, 360, wrap=True),
-    'headingADF': forceSeriesGenerator(0, 360, wrap=True),
-    'relativeADF': forceSeriesGenerator(0, 360, wrap=True),
-    'verticalSpeed': forceSeriesGenerator(-1500, 1500),
-    'turnrate': forceSeriesGenerator(-3, 3),
-    'airspeed': forceSeriesGenerator(40, 200),
-    'suctionPressure': forceSeriesGenerator(0, 10),
-    'manifoldPressure': forceSeriesGenerator(10, 50),
-    'fuel.front': forceSeriesGenerator(0, 26),
-    'fuel.center': forceSeriesGenerator(0, 26),
-    'fuel.rear': forceSeriesGenerator(0, 20),
-    'fuelSelector': categoricalGenerator(['front', 'center', 'rear']),
-    'engineRPM': forceSeriesGenerator(300, 3500),
-    'oilPressure': forceSeriesGenerator(0, 200),
-    'fuelPressure': forceSeriesGenerator(0, 10),
-    'oilTemperature': forceSeriesGenerator(0, 100),
-    'cylinderHeadTemp': forceSeriesGenerator(-50, 50),
-}
-
+state = ChangeDict()
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Serve content directly from the panels folder at /panels URL
 app.mount("/panels", StaticFiles(directory="panels"), name="static")
 
 
-# Serve random metrics
-@app.get("/metrics/fake.json")
-def metrics_fake():
-    return {k: next(v) for (k, v) in metricGenerators.items()}
+@app.get("/metrics.json")
+def metrics_json(metrics: str = '', latest: int = 0, units: bool = False):
+    ms = metrics.split(',') if metrics else None
+    print(metrics, ms, latest)
+    d = source.pollMetrics(ms)
+    state.update(d)
+    d = {
+        k: v for (k, v) in state.changedsince(latest).items()
+        if not ms or k in ms
+    }
+    result = {
+        "latest": state.latest(),
+        "metrics": d
+    }
+    if units:
+        result['units'] = {
+            k: v for (k, v) in source.metricUnits().items()
+            if not ms or k in ms
+        }
+    return result
 
 
-# Serve live metrics from xplane
-@app.get("/metrics/xplane.json")
-def metrics_xplane():
-    return pollXPlane()
-
-
-# Serve live metrics from xplane
-@app.get("/metrics/fs2020.json")
-def metrics_xplane():
-    return pollFS2020()
-
-
-# Serve live metrics from your actual source
-@app.get("/metrics/live.json")
-def metrics_live():
-    return {}       #TODO: fill this in
+# Receive external inputs
+@app.post("/inputs")
+def metrics_inputs(d: Dict[str, Any]):
+    print('/inputs got', d)
+    state.update(d)
+    #TODO - connect inputs and actions

@@ -35,18 +35,26 @@ for m in mapping:
     m['simvar'] = sv
 
 
-def pollMetrics():
-    metrics = {}
+def pollMetrics(metrics):
+    data = {}
     for m in mapping:
+        name = m['metric']
+        if metrics and name not in metrics:
+            continue
         sv = m['simvar']
         if not sv:
             continue
         v = sv.get()
         if 'fx' in m:
             v = eval(m['fx'], None, dict(x=v))
-        metrics[m['metric'] + ':' + m['unit']] = v
-    return metrics
+        data[name] = v
+    return data
+
+
+def metricUnits():
+    return {m['metric']: m['unit'] for m in mapping}
 
 
 if __name__ == '__main__':
+    print(json.dumps(getUnits(), indent=4, sort_keys=True))
     print(json.dumps(pollMetrics(), indent=4, sort_keys=True))
