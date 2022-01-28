@@ -11,7 +11,7 @@ with open(path.join(mydir, 'units.yml')) as f:
     units = yaml.load(f)
 
 unitmap = {}
-for std, simunits in units.keys():
+for std, simunits in units.items():
     if not isinstance(simunits, list):
         simunits = [simunits]
     for u in simunits:
