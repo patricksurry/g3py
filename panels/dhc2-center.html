@@ -8,9 +8,7 @@ g3.panel()
     .width(1200)
     .height(1200)
     .interval(250)
-//    .url('/metrics/xplane.json')    
-    .url('/metrics/fs2020.json')
-//    .url('/metrics/fake.json')
+    .url('http://simba.local:8000/metrics.json')
     .append(
         g3.put().x(147).y(247).scale(1.36).append(g3.contrib.engine.suctionPressure.DHC2()),
         g3.put().x(537).y(249).scale(1.36).append(g3.contrib.engine.fuel.DHC2()),
