@@ -25,6 +25,11 @@ app.add_middleware(
 app.mount("/panels", StaticFiles(directory="panels"), name="static")
 
 
+@app.get('/')
+def root_json():
+    return {'status': 'ok'}
+
+
 @app.get("/metrics.json")
 def metrics_json(metrics: str = '', latest: int = 0, units: bool = False):
     ms = metrics.split(',') if metrics else None
