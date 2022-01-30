@@ -30,12 +30,18 @@ def root_json():
     return {'status': 'ok'}
 
 
+def update_with_triggers(d):
+    latest = state.latest()
+    state.update(d)
+    out = source.triggerActions(state.changedsince(latest))
+    state.update(out)
+
+
 @app.get("/metrics.json")
 def metrics_json(metrics: str = '', latest: int = 0, units: bool = False):
     ms = metrics.split(',') if metrics else None
-    print(metrics, ms, latest)
     d = source.pollMetrics(ms)
-    state.update(d)
+    update_with_triggers(d)
     d = {
         k: v for (k, v) in state.changedsince(latest).items()
         if not ms or k in ms
@@ -55,6 +61,4 @@ def metrics_json(metrics: str = '', latest: int = 0, units: bool = False):
 # Receive external inputs
 @app.post("/inputs")
 def metrics_inputs(d: Dict[str, Any]):
-    print('/inputs got', d)
-    state.update(d)
-    #TODO - connect inputs and actions
+    update_with_triggers(d)

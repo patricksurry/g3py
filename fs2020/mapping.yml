@@ -54,6 +54,14 @@ metrics:
   - metric: cylinderHeadTemp
     simvar: "ENG_CYLINDER_HEAD_TEMPERATURE:1"
 
+  - metric: suctionPressure
+    simvar: SUCTION_PRESSURE
+
+  - metric: fuelWarning  # red fuel pressure warning light
+    simvar: WARNING_FUEL
+
+  - metric: oilPressureWarning  # organe
+    simvar: WARNING OIL PRESSURE
 
 todo:
   - metric: nav1obs
@@ -112,3 +120,47 @@ todo:
   - metric: midnightSecondsLocal
     dref: sim/time/local_time_sec
     unit: s
+
+
+# Actions are rules which are triggered when input metrics change.
+# The simplest action is copying an input metric to an output metric.
+# The raw input value can be transformed by adding an `fx` key
+# with a python expression where `x` is the raw input.
+# FS2020 supports actions that trigger simulator events or set SimVars.
+# Specify `simvar:` to set a simulator variable (which must also be mapped as a metric).
+# Specify `event:` to trigger a simulator event.
+# Simple events are just called with no arguments, e.g. to toggle a value.
+# Add `method: set` to call the event with the input value as argument.
+# Add `method: incdec` to choose one of two events based on the sign of
+# the input value (the first event for positive values),
+# which will be called `abs(x)` times.
+
+actions:
+  - input: SW1-1
+    method: set
+    event: PARKING_BRAKE_SET # set parking brake on/off
+  - input: SW1-2
+    method: set
+    event: PITOT_HEAT_SET
+  - input: ALT-ROT
+    method: incdec  # choose event by sign of input and call abs(input) times
+    event: [KOHLSMAN_INC, KOHLSMAN_DEC] # inc/dec altimeter setting
+  - input: ATT-BTN
+    event: ATTITUDE_CAGE_BUTTON # Cages attitude indicator at 0 pitch and bank
+    # default method is simply call of event
+  - input: some_input
+    fx: x + 0         # arbitary python function of the input value
+    simvar: SomeVar   # set simvar with input value
+  - input: SW3-1
+    output: FRONT_CABIN_LIGHTS
+  - input: SW3-2
+    output: REAR_CABIN_LIGHTS
+  - input: fuelWarning
+    output: RED_WARNING
+  - input: oilPressureWarning
+    output: ORANGE_WARNING
+
+
+
+
+    # GYRO_DRIFT_INC, GYRO_DRIFT_DEC # inc/dec heading indicator

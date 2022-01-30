@@ -9,7 +9,8 @@ from os import path
 
 yaml = YAML(typ='safe')
 with open(path.join(path.dirname(__file__), 'mapping.yml')) as f:
-    mapping = yaml.load(f)['metrics']
+    cfg =yaml.load(f)
+    mapping = cfg['metrics']
 
 
 def pollMetrics():
