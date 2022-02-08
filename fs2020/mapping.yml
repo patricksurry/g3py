@@ -5,60 +5,60 @@
 # See README.me for more details.
 metrics:
   - metric: heading
-    simvar: HEADING_INDICATOR
+    simvar: HEADING INDICATOR
 
   - metric: altitude
-    simvar: INDICATED_ALTITUDE
+    simvar: INDICATED ALTITUDE
 
   - metric: pressureSetting
-    simvar: BAROMETER_PRESSURE
+    simvar: BAROMETER PRESSURE
 
   - metric: pitch
-    simvar: ATTITUDE_INDICATOR_PITCH_DEGREES
+    simvar: ATTITUDE INDICATOR PITCH DEGREES
 
   - metric: roll
-    simvar: ATTITUDE_INDICATOR_BANK_DEGREES
+    simvar: ATTITUDE INDICATOR BANK DEGREES
 
   - metric: turnrate
-    simvar: TURN_INDICATOR_RATE
+    simvar: TURN INDICATOR RATE
 
   - metric: slip
-    simvar: TURN_COORDINATOR_BALL
+    simvar: TURN COORDINATOR BALL
     #TODO unit: position
 
   - metric: airspeed
-    simvar: AIRSPEED_INDICATED
+    simvar: AIRSPEED INDICATED
 
   - metric: verticalSpeed
-    simvar: VERTICAL_SPEED
+    simvar: VERTICAL SPEED
 
   - metric: compass
-    simvar: MAGNETIC_COMPASS
+    simvar: MAGNETIC COMPASS
 
   - metric: fuelPressure
-    simvar: "ENG_FUEL_PRESSURE:1"
+    simvar: "ENG FUEL PRESSURE:1"
 
   - metric: oilPressure
-    simvar: "ENG_OIL_PRESSURE:1"
+    simvar: "ENG OIL PRESSURE:1"
     #TODO unit: foot pounds => pounds per square foot?
 
   - metric: oilTemperature
-    simvar: "ENG_OIL_TEMPERATURE:1"
+    simvar: "ENG OIL TEMPERATURE:1"
 
   - metric: engineRPM
-    simvar: "ENG_N1_RPM:1"
+    simvar: "GENERAL ENG RPM:1"
 
   - metric: manifoldPressure
-    simvar: "ENG_MANIFOLD_PRESSURE:1"
+    simvar: "ENG MANIFOLD PRESSURE:1"
 
   - metric: cylinderHeadTemp
-    simvar: "ENG_CYLINDER_HEAD_TEMPERATURE:1"
+    simvar: "ENG CYLINDER HEAD TEMPERATURE:1"
 
   - metric: suctionPressure
-    simvar: SUCTION_PRESSURE
+    simvar: SUCTION PRESSURE
 
   - metric: fuelWarning  # red fuel pressure warning light
-    simvar: WARNING_FUEL
+    simvar: WARNING FUEL
 
   - metric: oilPressureWarning  # organe
     simvar: WARNING OIL PRESSURE
@@ -127,7 +127,7 @@ todo:
 # The raw input value can be transformed by adding an `fx` key
 # with a python expression where `x` is the raw input.
 # FS2020 supports actions that trigger simulator events or set SimVars.
-# Specify `simvar:` to set a simulator variable (which must also be mapped as a metric).
+# Specify `simvar:` to set a simulator variable.
 # Specify `event:` to trigger a simulator event.
 # Simple events are just called with no arguments, e.g. to toggle a value.
 # Add `method: set` to call the event with the input value as argument.

@@ -2,8 +2,8 @@ from typing import Dict, List, Optional, Any
 import json
 from os import path
 from ruamel.yaml import YAML
-from fastapi_utils.tasks import repeat_every
-from simconnect import SimConnect
+from simconnect import SimConnect, PERIOD_VISUAL_FRAME
+import logging
 
 
 yaml = YAML(typ='safe')
@@ -27,41 +27,41 @@ with open(path.join(mydir, 'mapping.yml')) as f:
 
 # Create SimConnect link
 sc = SimConnect()
-dd = sc.subscribe_simdata([m['simvar'] for m in mapping])
+dd = sc.subscribe_simdata(
+    [m['simvar'] for m in mapping],
+    period=PERIOD_VISUAL_FRAME,
+    interval=10,
+)
 simvars = dd.get_units()
 latest = 0
 
-
-@repeat_every(seconds=1)
-def process_simconnect_events() -> None:
-    while sc.receive():
-        pass
-
-# process the event queue periodically to stop it growing between poll calls
-process_simconnect_events()
-
-
 for m in mapping:
-    sv = simvars.get(m['simvar'])
-    if sv:
-        unit = sv.get('units')
+    unit = simvars.get(m['simvar'])
+    if m['simvar'] in simvars:
+        unit = simvars[m['simvar']]
         m['unit'] = unitmap.get(unit, unit)
     else:
         print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
 
 
-def pollMetrics(metrics: Optional[List[str]] = None) -> Dict[str, Any]:
-    global latest
+def process_simconnect_events():
+#    logging.debug("exhausting simconnect queue")
     while sc.receive():
         pass
+
+
+def pollMetrics(metrics: Optional[List[str]] = None) -> Dict[str, Any]:
+    global latest
+    process_simconnect_events()
     recent = dd.simdata.changedsince(latest)
     latest = dd.simdata.latest()
     data = {}
     for m in mapping:
         name = m['metric']
-        if metrics and name not in metrics or name not in recent:
+        sv = m['simvar']
+        if metrics and name not in metrics or sv not in recent:
             continue
-        v = recent[name]
+        v = recent[sv]
         if 'fx' in m:
             v = eval(m['fx'], None, dict(x=v))
         data[name] = v
