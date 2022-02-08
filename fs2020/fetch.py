@@ -2,7 +2,8 @@ from typing import Dict, List, Optional, Any
 import json
 from os import path
 from ruamel.yaml import YAML
-from SimConnect import SimConnect, AircraftEvents, AircraftRequests
+from fastapi_utils.tasks import repeat_every
+from simconnect import SimConnect
 
 
 yaml = YAML(typ='safe')
@@ -25,31 +26,42 @@ with open(path.join(mydir, 'mapping.yml')) as f:
 
 
 # Create SimConnect link
-sm = SimConnect()
-# _time is cache length in milliseconds
-aq = AircraftRequests(sm, _time=100)
-ae = AircraftEvents(sm)
+sc = SimConnect()
+dd = sc.subscribe_simdata([m['simvar'] for m in mapping])
+simvars = dd.get_units()
+latest = 0
+
+
+@repeat_every(seconds=1)
+def process_simconnect_events() -> None:
+    while sc.receive():
+        pass
+
+# process the event queue periodically to stop it growing between poll calls
+process_simconnect_events()
+
 
 for m in mapping:
-    sv = aq.find(m['simvar'])
+    sv = simvars.get(m['simvar'])
     if sv:
-        unit = sv.definitions[0][1].decode('utf-8')
+        unit = sv.get('units')
         m['unit'] = unitmap.get(unit, unit)
     else:
         print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
-    m['simvar'] = sv
 
 
 def pollMetrics(metrics: Optional[List[str]] = None) -> Dict[str, Any]:
+    global latest
+    while sc.receive():
+        pass
+    recent = dd.simdata.changedsince(latest)
+    latest = dd.simdata.latest()
     data = {}
     for m in mapping:
         name = m['metric']
-        if metrics and name not in metrics:
+        if metrics and name not in metrics or name not in recent:
             continue
-        sv = m['simvar']
-        if not sv:
-            continue
-        v = sv.get()
+        v = recent[name]
         if 'fx' in m:
             v = eval(m['fx'], None, dict(x=v))
         data[name] = v
@@ -72,29 +84,27 @@ def triggerActions(inputs: Dict[str, Any]) -> Dict[str, Any]:
             # simple copy from input to output
             if 'output' in rule:
                 outputs[rule['output']] = v
+            # set a simulation variable
             elif 'simvar' in rule:
-                sv = mapping.get(rule['simvar'])
-                if not sv:
-                    print(f"Warning: {rule['simvar']} not found for input {k}")
-                else:
-                    sv.set(v)
+                sc.set_simdatum(rule['simvar'], v)
+            # generate an event
             elif 'event' in rule:
                 name = rule['event']
                 method = rule.get('method')
                 if method == 'incdec':
                     name = name[0 if v > 0 else 1]
-                ev = ae.find(name)
-                if not ev:
-                    continue
+                # trigger an inc / dec event a number of times
                 if method == 'incdec':
                     v = abs(v)
                     while v > 0:
-                        ev()
+                        sc.send_event(name)
                         v -= 1
+                # trigger an event with a data value
                 elif method == 'set':
-                    ev(v)
+                    sc.send_event(name, v)
+                # just trigger an event
                 else:
-                    ev()
+                    sc.send_event(name)
             else:
                 print(f"Warning: malformed rule {rule}")
     return outputs

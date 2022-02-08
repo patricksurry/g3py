@@ -3,8 +3,9 @@ dependencies:
   - pip
   - python=3.7
   - pip:
-    - simconnect
+    - pysimconnect
     - fastapi
+    - fastapi_utils
     - uvicorn
     - aiofiles
     - ruamel.yaml
