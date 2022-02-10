@@ -44,17 +44,13 @@ metrics:
     simvar: NAV RADIAL
   - metric: radialDeviation
     simvar: NAV RADIAL ERROR
-  - metric: toFrVOR  # G3 wants 0 = to, 1 = from
-    fx: x - 1
+  - metric: toFromVOR  # G3 wants -1 = from, 0 = unreliable, 1 = to
+    fx: x if x < 2 else -1
     simvar: NAV TOFROM  # 0 off 1 = to 2 = from
-  - metric: reliabilityVOR    # G3 wants 1 if unreliable
-    fx: x == 0
-    simvar: NAV_TOFROM  # 0 is off
 
-  # compass not implemented yet
+  # compass not physically implemented yet
   - metric: compass
     simvar: MAGNETIC COMPASS
-
 
   # central panel
   - metric: suctionPressure
@@ -150,7 +146,23 @@ actions:
   - input: MASTER1
     simvar: "GENERAL ENG GENERATOR ACTIVE:1"  # master alternator
 
-  #TODO KEY {off, right magneto, left magneto, both, and start}
+  # KEY is a 6 position switch, where selected pos is 1-6 or 0 if none
+  # we want behavior like {off, right magneto, left magneto, both, and start}
+  # 0, 1 => off; 2=right mag; 3=left mag; 4=both mags; 5+=start
+  - input: KEY
+    fx: x >= 3
+    simvar: "RECIP ENG LEFT MAGNETO:1"
+  - input: KEY
+    fx: x == 2 or x >= 4
+    simvar: "RECIP ENG RIGHT MAGNETO:1"
+  - input: KEY
+    fx: x >= 5
+    method: set
+    event: STARTER_SET
+
+  - input: STARTER  #TODO switch duplicates key position?
+    method: set
+    event: STARTER_SET
 
   - input: WOBBLE
     #fx: todo as a percentage
@@ -164,18 +176,10 @@ actions:
     #fx: todo as a percentage
     simvar: "GENERAL ENG MIXTURE LEVER POSITION:1"
 
-  - input: STARTER
+  - input: FUELSELECTOR
+    fx: "{0b00: 0, 0b01: 2, 0b10: 3, 0b11: 6}[x]"
     method: set
-    event: STARTER_SET
-
-  #TODO this should be FUEL SELECTOR OFF/FRONT/CENTER/REAR
-  # FUEL_SELECTOR_SET 0 / 2 / 3 / 1 or 6 ?
-  - input: MAGNETO
-    fx: bool(x & 2)
-    simvar: "RECIP ENG LEFT MAGNETO:1"
-  - input: MAGNETO
-    fx: bool(x & 1)
-    simvar: "RECIP ENG RIGHT MAGNETO:1"
+    event: FUEL_SELECTOR_SET
 
   - input: SW1-1  #TODO instrument lights?
     method: set
