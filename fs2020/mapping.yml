@@ -4,6 +4,7 @@
 # a python expression as 'fx', where the raw value is passed as a variable `x`
 # See README.me for more details.
 metrics:
+  # Nav panel
   - metric: heading
     simvar: HEADING INDICATOR
 
@@ -32,86 +33,64 @@ metrics:
   - metric: verticalSpeed
     simvar: VERTICAL SPEED
 
+  # ADF gauge
+  - metric: relativeADF
+    simvar: ADF RADIAL
+  - metric: headingADF
+    simvar: ADF CARD
+
+  # VOR gauge
+  - metric: radialVOR
+    simvar: NAV RADIAL
+  - metric: radialDeviation
+    simvar: NAV RADIAL ERROR
+  - metric: toFrVOR  # G3 wants 0 = to, 1 = from
+    fx: x - 1
+    simvar: NAV TOFROM  # 0 off 1 = to 2 = from
+  - metric: reliabilityVOR    # G3 wants 1 if unreliable
+    fx: x == 0
+    simvar: NAV_TOFROM  # 0 is off
+
+  # compass not implemented yet
   - metric: compass
     simvar: MAGNETIC COMPASS
 
+
+  # central panel
+  - metric: suctionPressure
+    simvar: SUCTION PRESSURE
+
+  - metric: fuelFront
+    simvar: "FUEL SELECTED QUANTITY:2"  # left
+  - metric: fuelCenter
+    simvar: "FUEL SELECTED QUANTITY:3"  # right
+  - metric: fuelRear
+    simvar: "FUEL SELECTED QUANTITY:6"  # center
+
   - metric: fuelPressure
     simvar: "ENG FUEL PRESSURE:1"
-
   - metric: oilPressure
     simvar: "ENG OIL PRESSURE:1"
     #TODO unit: foot pounds => pounds per square foot?
-
   - metric: oilTemperature
     simvar: "ENG OIL TEMPERATURE:1"
-
-  - metric: engineRPM
-    simvar: "GENERAL ENG RPM:1"
 
   - metric: manifoldPressure
     simvar: "ENG MANIFOLD PRESSURE:1"
 
+  - metric: engineRPM
+    simvar: "GENERAL ENG RPM:1"
+
   - metric: cylinderHeadTemp
     simvar: "ENG CYLINDER HEAD TEMPERATURE:1"
-
-  - metric: suctionPressure
-    simvar: SUCTION PRESSURE
 
   - metric: fuelWarning  # red fuel pressure warning light
     simvar: WARNING FUEL
 
-  - metric: oilPressureWarning  # organe
+  - metric: oilPressureWarning  # orange?
     simvar: WARNING OIL PRESSURE
 
 todo:
-  - metric: nav1obs
-    dref: sim/cockpit2/radios/actuators/nav1_obs_deg_mag_pilot
-
-  - metric: nav1course
-    dref: sim/cockpit2/radios/actuators/nav1_course_deg_mag_pilot
-
-  - metric: nav1bearing
-    dref: sim/cockpit2/radios/indicators/nav1_bearing_deg_mag
-
-  - metric: nav1rel
-    dref: sim/cockpit2/radios/indicators/nav1_relative_bearing_deg
-    unit: deg
-
-    # difference between actual heading and selected radial
-  - metric: nav1relvac
-    dref: sim/cockpit2/radios/indicators/nav1_relative_heading_vacuum_deg_pilot
-
-    # heading deviation in 'dots' of 2 degrees? (doesn't seem consistent with xplane display)
-  - metric: nav1dots
-    dref: sim/cockpit2/radios/indicators/nav1_hdef_dots_pilot
-
-    # nav1_flag_from_to_pilot: 0 is flag, 1 is to, 2 is from.
-  - metric: toFrVOR
-    dref: sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot
-    fx: x - 1    # G3 wants 0 = to, 1 = from
-
-  - metric: reliabilityVOR
-    dref: sim/cockpit2/radios/indicators/nav1_flag_from_to_pilot
-    fx: x == 0    # G3 wants 1 if unreliable
-
-  #TODO these aren't right yet
-  - metric: headingADF
-    dref: sim/cockpit2/radios/actuators/adf1_card_heading_deg_mag_pilot
-    unit: deg
-
-  - metric: relativeADF
-    dref: sim/cockpit2/radios/indicators/adf1_relative_bearing_deg
-    unit: deg
-
-  # 0=none,1=left,2=center,3=right,4=all
-  - metric: fuelSelector
-    dref: sim/cockpit2/fuel/fuel_tank_selector
-
-  # Example of mapping from an XPlane vector to a list of G3 metrics
-  - metric: [fuelFront, fuelCenter, fuelRear]
-    dref: sim/cockpit2/fuel/fuel_quantity
-    unit: gal
-
   #TODO align date / time units with G3
   - metric: midnightSecondsUTC
     dref: sim/time/zulu_time_sec
@@ -136,31 +115,100 @@ todo:
 # which will be called `abs(x)` times.
 
 actions:
-  - input: SW1-1
+#  - input: ALT-BTN
+  - input: ALT-ROT
+    method: incdec  # choose event by sign of input and call abs(input) times
+    event: [KOHLSMAN_INC, KOHLSMAN_DEC] # inc/dec altimeter setting
+
+  - input: ATT-BTN
+    # default method is simply call of event
+    event: ATTITUDE_CAGE_BUTTON # Cages attitude indicator at 0 pitch and bank
+  - input: ATT-ROT
+    method: incdec
+    event: [ATTITUDE_BARS_POSITION_UP, ATTITUDE_BARS_POSITION_DOWN]
+
+#  - input: VOR-BTN
+  - input: VOR-ROT
+    method: incdec
+    event: [VOR1_OBI_INC, VOR1_OBI_DEC]
+
+#  - input: ADF-BTN
+  - input: ADF-ROT
+    method: incdec
+    event: [ADF_CARD_INC, ADF_CARD_DEC]
+
+#  - input: HDG-BTN   HEADING_BUG_SELECT ?
+  - input: HDG-ROT
+    method: incdec
+    event: [HEADING_BUG_INC, HEADING_BUG_DEC]
+    # or maybe GYRO_DRIFT_INC, GYRO_DRIFT_DEC ?
+
+
+  - input: MASTER0
+    simvar: "ELECTRICAL MASTER BATTERY"  # master battery
+
+  - input: MASTER1
+    simvar: "GENERAL ENG GENERATOR ACTIVE:1"  # master alternator
+
+  #TODO KEY {off, right magneto, left magneto, both, and start}
+
+  - input: WOBBLE
+    #fx: todo as a percentage
+    method: set
+    event: MANUAL_FUEL_PRESSURE_PUMP_SET
+
+  - input: PRIMER
+    simvar: "ENGINE PRIMER"  #TODO engine primer position
+
+  - input: MIXTURE
+    #fx: todo as a percentage
+    simvar: "GENERAL ENG MIXTURE LEVER POSITION:1"
+
+  - input: STARTER
+    method: set
+    event: STARTER_SET
+
+  #TODO this should be FUEL SELECTOR OFF/FRONT/CENTER/REAR
+  # FUEL_SELECTOR_SET 0 / 2 / 3 / 1 or 6 ?
+  - input: MAGNETO
+    fx: bool(x & 2)
+    simvar: "RECIP ENG LEFT MAGNETO:1"
+  - input: MAGNETO
+    fx: bool(x & 1)
+    simvar: "RECIP ENG RIGHT MAGNETO:1"
+
+  - input: SW1-1  #TODO instrument lights?
     method: set
     event: PARKING_BRAKE_SET # set parking brake on/off
   - input: SW1-2
     method: set
-    event: PITOT_HEAT_SET
-  - input: ALT-ROT
-    method: incdec  # choose event by sign of input and call abs(input) times
-    event: [KOHLSMAN_INC, KOHLSMAN_DEC] # inc/dec altimeter setting
-  - input: ATT-BTN
-    event: ATTITUDE_CAGE_BUTTON # Cages attitude indicator at 0 pitch and bank
-    # default method is simply call of event
-  - input: some_input
-    fx: x + 0         # arbitary python function of the input value
-    simvar: SomeVar   # set simvar with input value
-  - input: SW3-1
+    event: STROBES_SET
+  - input: SW1-3
+    method: set
+    event: LANDING_LIGHTS_SET
+
+  - input: SW2-1
+    method: set
+    event: BEACON_LIGHTS_SET
+  - input: SW2-2
+    method: set
+    event: NAV_LIGHTS_SET
+  - input: SW2-3
+    output: REAR_CABIN_LIGHTS  # physical led strip
+  - input: SW2-4
     output: FRONT_CABIN_LIGHTS
+  - input: SW2-5
+    method: set
+    event: PITOT_HEAT_SET
+
+  - input: SW3-1
+    event: TOGGLE_ELECT_FUEL_PUMP  #TODO fuel pump?
   - input: SW3-2
-    output: REAR_CABIN_LIGHTS
+    simvar: "RECIP ENG EMERGENCY BOOST ACTIVE:1"  # boost coil?
+  - input: SW3-3
+    #TODO starter?  radio master?
+
   - input: fuelWarning
     output: RED_WARNING
   - input: oilPressureWarning
     output: ORANGE_WARNING
-
-
-
-
-    # GYRO_DRIFT_INC, GYRO_DRIFT_DEC # inc/dec heading indicator
