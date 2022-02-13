@@ -17,7 +17,7 @@ for std, simunits in units.items():
     if not isinstance(simunits, list):
         simunits = [simunits]
     for u in simunits:
-        unitmap[u] = std
+        unitmap[u.lower()] = std
 
 with open(path.join(mydir, 'mapping.yml')) as f:
     cfg = yaml.load(f)
@@ -28,7 +28,7 @@ with open(path.join(mydir, 'mapping.yml')) as f:
 # Create SimConnect link
 sc = SimConnect()
 dd = sc.subscribe_simdata(
-    [m['simvar'] for m in mapping],
+    [dict(name=m['simvar'], units=m.get('unit')) for m in mapping],
     period=PERIOD_VISUAL_FRAME,
     interval=10,
 )
@@ -39,7 +39,7 @@ for m in mapping:
     unit = simvars.get(m['simvar'])
     if m['simvar'] in simvars:
         unit = simvars[m['simvar']]
-        m['unit'] = unitmap.get(unit, unit)
+        m['unit'] = unitmap.get(unit.lower(), unit)
     else:
         print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
 
@@ -83,9 +83,11 @@ def triggerActions(inputs: Dict[str, Any]) -> Dict[str, Any]:
                 v = eval(rule['fx'], None, dict(x=v))
             # simple copy from input to output
             if 'output' in rule:
+                logging.debug(f"triggerActions: setting {rule['output']} to {v}")
                 outputs[rule['output']] = v
             # set a simulation variable
             elif 'simvar' in rule:
+                logging.debug(f"triggerActions: setting simvar {rule['simvar']} to {v}")
                 sc.set_simdatum(rule['simvar'], v)
             # generate an event
             elif 'event' in rule:
@@ -96,17 +98,20 @@ def triggerActions(inputs: Dict[str, Any]) -> Dict[str, Any]:
                 # trigger an inc / dec event a number of times
                 if method == 'incdec':
                     v = abs(v)
+                    logging.debug(f"triggerActions: sending {v} x {name} events")
                     while v > 0:
                         sc.send_event(name)
                         v -= 1
                 # trigger an event with a data value
                 elif method == 'set':
+                    logging.debug(f"triggerActions: sending event {name}({v})")
                     sc.send_event(name, v)
                 # just trigger an event
                 else:
+                    logging.debug(f"triggerActions: sending event {name}")
                     sc.send_event(name)
             else:
-                print(f"Warning: malformed rule {rule}")
+                logging.warning(f"triggerActions: malformed rule {rule}")
     return outputs
 
 

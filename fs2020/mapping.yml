@@ -64,10 +64,11 @@ metrics:
     simvar: "FUEL SELECTED QUANTITY:6"  # center
 
   - metric: fuelPressure
+    unit: psi
     simvar: "ENG FUEL PRESSURE:1"
   - metric: oilPressure
+    unit: psi
     simvar: "ENG OIL PRESSURE:1"
-    #TODO unit: foot pounds => pounds per square foot?
   - metric: oilTemperature
     simvar: "ENG OIL TEMPERATURE:1"
 

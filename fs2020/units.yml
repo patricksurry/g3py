@@ -1,10 +1,13 @@
-ft: Feet
-deg: Degrees
-rad: Radians
-knot: Knots
-R: Rankine
+ft: feet
+deg: degrees
+rad: radians
+knot: knots
+R: rankine
 rpm: Rpm
-inHg: inHG
-rad/s: Radians per second
+inHg: 
+  - inHG
+  - inches of mercury
+rad/s: radians per second
 ft/min: feet/minute
-hPa: Millibars
+ft/s: feet/second
+hPa: millibars
