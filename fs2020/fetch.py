@@ -34,18 +34,21 @@ dd = sc.subscribe_simdata(
 )
 simvars = dd.get_units()
 latest = 0
-
+# update mapping with actual simvar units
 for m in mapping:
-    unit = simvars.get(m['simvar'])
     if m['simvar'] in simvars:
         unit = simvars[m['simvar']]
         m['unit'] = unitmap.get(unit.lower(), unit)
     else:
+        m.setdefault('unit', None)
         print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
 
 
-def process_simconnect_events():
-#    logging.debug("exhausting simconnect queue")
+background_frequency_seconds = 1
+
+
+def background_task() -> None:
+    # logging.debug("exhausting simconnect queue")
     while sc.receive():
         pass
 
@@ -68,8 +71,12 @@ def pollMetrics(metrics: Optional[List[str]] = None) -> Dict[str, Any]:
     return data
 
 
-def metricUnits():
-    return {m['metric']: m['unit'] for m in mapping}
+def metricUnits() -> Dict[str, str]:
+    """Return the effective unit for each metric, overriding with fxunit if present"""
+    return {
+        m['metric']: m['fxunit'] if 'fxunit' in m else m['unit']
+        for m in mapping
+    }
 
 
 def triggerActions(inputs: Dict[str, Any]) -> Dict[str, Any]:

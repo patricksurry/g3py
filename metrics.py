@@ -64,7 +64,11 @@ def metrics_json(metrics: str = '', latest: int = 0, units: bool = False):
 def metrics_inputs(d: Dict[str, Any]):
     update_with_triggers(d)
 
-@app.on_event("startup")
-@repeat_every(seconds=1, raise_exceptions=True)
-def poll_events() -> None:
-    source.process_simconnect_events()
+
+if hasattr(source, 'background_task'):
+    freq = getattr(source, 'background_frequency_seconds', 1)
+
+    @app.on_event("startup")
+    @repeat_every(seconds=freq, raise_exceptions=True)
+    def poll_events() -> None:
+        source.background_task()

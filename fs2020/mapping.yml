@@ -25,7 +25,8 @@ metrics:
 
   - metric: slip
     simvar: TURN COORDINATOR BALL
-    #TODO unit: position
+    fx: x / 5  # simvar is position in [-128, 128], roughly to degrees [-25, 25]
+    fxunit: deg
 
   - metric: airspeed
     simvar: AIRSPEED INDICATED
@@ -45,7 +46,8 @@ metrics:
   - metric: radialDeviation
     simvar: NAV RADIAL ERROR
   - metric: toFromVOR  # G3 wants -1 = from, 0 = unreliable, 1 = to
-    fx: x if x < 2 else -1
+    fx: -1 if x == 2 else x
+    fxunit: None
     simvar: NAV TOFROM  # 0 off 1 = to 2 = from
 
   # compass not physically implemented yet
@@ -166,7 +168,7 @@ actions:
     event: STARTER_SET
 
   - input: WOBBLE
-    #fx: todo as a percentage
+    #fx: TODO as a percentage
     method: set
     event: MANUAL_FUEL_PRESSURE_PUMP_SET
 
@@ -174,7 +176,7 @@ actions:
     simvar: "ENGINE PRIMER"  #TODO engine primer position
 
   - input: MIXTURE
-    #fx: todo as a percentage
+    #fx: TODO as a percentage
     simvar: "GENERAL ENG MIXTURE LEVER POSITION:1"
 
   - input: FUELSELECTOR
