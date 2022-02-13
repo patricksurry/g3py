@@ -56,11 +56,11 @@ metrics:
   - metric: suctionPressure
     simvar: SUCTION PRESSURE
 
-  - metric: fuelFront
+  - metric: fuel.front
     simvar: "FUEL SELECTED QUANTITY:2"  # left
-  - metric: fuelCenter
+  - metric: fuel.center
     simvar: "FUEL SELECTED QUANTITY:3"  # right
-  - metric: fuelRear
+  - metric: fuel.rear
     simvar: "FUEL SELECTED QUANTITY:6"  # center
 
   - metric: fuelPressure
@@ -142,10 +142,10 @@ actions:
 
 
   - input: MASTER0
-    simvar: "ELECTRICAL MASTER BATTERY"  # master battery
+    simvar: "GENERAL ENG GENERATOR ACTIVE:1"  # master alternator
 
   - input: MASTER1
-    simvar: "GENERAL ENG GENERATOR ACTIVE:1"  # master alternator
+    simvar: "ELECTRICAL MASTER BATTERY"  # master battery
 
   # KEY is a 6 position switch, where selected pos is 1-6 or 0 if none
   # we want behavior like {off, right magneto, left magneto, both, and start}
