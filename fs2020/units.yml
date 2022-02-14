@@ -1,3 +1,5 @@
+# mapping from g3 supported units (via https://github.com/convert-units/convert-units)
+# to one or more equivalent MSFS units
 ft: feet
 deg: degrees
 rad: radians
@@ -11,3 +13,4 @@ rad/s: radians per second
 ft/min: feet/minute
 ft/s: feet/second
 hPa: millibars
+gal: gallons

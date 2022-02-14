@@ -64,7 +64,11 @@ metrics:
     simvar: "FUEL SELECTED QUANTITY:3"  # right
   - metric: fuel.rear
     simvar: "FUEL SELECTED QUANTITY:6"  # center
-
+  - metric: fuelSelector
+    simvar: "FUEL TANK SELECTOR:1"
+    #TODO 1 == all
+    fx: "{1: 'front', 2: 'front', 3: 'center', 6: 'rear'}.get(x)"
+    fxunit: None
   - metric: fuelPressure
     unit: psi
     simvar: "ENG FUEL PRESSURE:1"

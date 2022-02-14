@@ -55,7 +55,7 @@ def background_task() -> None:
 
 def pollMetrics(metrics: Optional[List[str]] = None) -> Dict[str, Any]:
     global latest
-    process_simconnect_events()
+    background_task()
     recent = dd.simdata.changedsince(latest)
     latest = dd.simdata.latest()
     data = {}
