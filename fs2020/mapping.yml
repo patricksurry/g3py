@@ -216,8 +216,8 @@ actions:
     event: TOGGLE_ELECT_FUEL_PUMP  #TODO fuel pump?
   - input: SW3-2
     simvar: "RECIP ENG EMERGENCY BOOST ACTIVE:1"  # boost coil?
-  - input: SW3-3
-    #TODO starter?  radio master?
+#  - input: SW3-3
+#TODO starter?  radio master?
 
   - input: fuelWarning
     output: RED_WARNING
