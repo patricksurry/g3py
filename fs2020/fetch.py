@@ -4,6 +4,11 @@ from os import path
 from ruamel.yaml import YAML
 from simconnect import SimConnect, PERIOD_VISUAL_FRAME
 import logging
+from time import sleep
+
+
+# default interval for running background task
+background_frequency_seconds = 1
 
 
 yaml = YAML(typ='safe')
@@ -42,9 +47,6 @@ for m in mapping:
     else:
         m.setdefault('unit', None)
         print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
-
-
-background_frequency_seconds = 1
 
 
 def background_task() -> None:
@@ -120,6 +122,12 @@ def triggerActions(inputs: Dict[str, Any]) -> Dict[str, Any]:
             else:
                 logging.warning(f"triggerActions: malformed rule {rule}")
     return outputs
+
+
+# block until first subscription update so we have valid initial metrics
+while not dd.simdata.keys():
+    background_task()
+    sleep(0.1)
 
 
 if __name__ == '__main__':
