@@ -5,8 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_utils.tasks import repeat_every
 
 #import xplane.fetch as source
-import fs2020.fetch as source
-#import fakemetrics as source
+#import fs2020.fetch as source
+import fakemetrics as source
 
 from changedict import ChangeDict
 

@@ -55,6 +55,13 @@ class ChangeDict(OrderedDict):
             )
         )
 
+    def timed_items(self) -> list[tuple[Any, Any, int]]:
+        """return tuples of (key, value, timestamp) with most recent first"""
+        return [
+            (k, self[k], self.__times[k])
+            for k in reversed(self)
+        ]
+
 
 if __name__ == '__main__':
     from time import sleep

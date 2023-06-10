@@ -6,6 +6,7 @@ dependencies:
     - pysimconnect
     - fastapi
     - fastapi_utils
+    - sse-starlette
     - uvicorn
     - aiofiles
     - ruamel.yaml
