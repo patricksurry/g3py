@@ -5,12 +5,12 @@
     <link rel="icon" href="material-speed-32.png">
 </head>
     <body>
-        <script src="https://unpkg.com/@patricksurry/g3/dist/g3-contrib.min.js"></script>
-<!--        <script src="./g3-contrib.min.js"></script> -->
+        <!-- <script src="https://unpkg.com/@patricksurry/g3/dist/g3-contrib.min.js"></script> -->
+        <script src="./g3-contrib.js"></script>
         <script>
 g3.panel()
-    .interval(250)
-    .url('/metrics.json')
+    // .interval(250).url('/metrics.json')
+    .interval(0).url('/stream')
     .append(
         g3.put().x(128).y(192).scale(0.9).append(g3.contrib.nav.airspeed.DHC2()),
         g3.put().x(384).y(192).scale(0.9).append(g3.contrib.nav.attitude.generic()),

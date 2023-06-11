@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from time import time
 import math
-from typing import Callable, Any
+from typing import Callable, Any, List, Tuple
 from itertools import takewhile
 
 
@@ -55,7 +55,7 @@ class ChangeDict(OrderedDict):
             )
         )
 
-    def timed_items(self) -> list[tuple[Any, Any, int]]:
+    def timed_items(self) -> List[Tuple[Any, Any, int]]:
         """return tuples of (key, value, timestamp) with most recent first"""
         return [
             (k, self[k], self.__times[k])

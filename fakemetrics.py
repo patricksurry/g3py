@@ -1,4 +1,6 @@
 from typing import Dict, List, Optional, Any
+import logging
+
 
 from faketimeseries import (
     timeGenerator, datetimeGenerator,
@@ -73,13 +75,13 @@ def triggerActions(inputs: Dict[str, Any]) -> Dict[str, Any]:
         for rule in rules:
             if 'fx' in rule:
                 v = eval(rule['fx'], None, dict(x=v))
-            print(f"action {rule['input']}({v})")
+            logging.debug(f"action {rule['input']}({v})")
             # simple copy from input to output
             if 'output' in rule:
-                print(f"set output {rule['output']} = {v}")
+                logging.debug(f"set output {rule['output']} = {v}")
                 outputs[rule['output']] = v
             elif 'simvar' in rule:
-                print(f"set simvar {rule['simvar']} = {v}")
+                logging.debug(f"set simvar {rule['simvar']} = {v}")
             elif 'event' in rule:
                 name = rule['event']
                 method = rule.get('method')
@@ -87,11 +89,11 @@ def triggerActions(inputs: Dict[str, Any]) -> Dict[str, Any]:
                     name = name[0 if v > 0 else 1]
                 if method == 'incdec':
                     v = abs(v)
-                    print(f"trigger {name}() * {v}")
+                    logging.debug(f"trigger {name}() * {v}")
                 elif method == 'set':
-                    print(f"trigger {name}({v})")
+                    logging.debug(f"trigger {name}({v})")
                 else:
-                    print(f"trigger {name}()")
+                    logging.debug(f"trigger {name}()")
             else:
-                print(f"Warning: malformed rule {rule}")
+                logging.debug(f"Warning: malformed rule {rule}")
     return outputs

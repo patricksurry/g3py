@@ -28,7 +28,7 @@ class Publisher:
 
     def publish(self, item: Any, topic: str = None):
         for sub in self.subs.values():
-            if topic in sub.topics or ...
+            if not topic or not sub.topics or topic in sub.topics:
                 sub.q.put_nowait(item)
 
     async def next(self, id) -> Any:

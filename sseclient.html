@@ -21,7 +21,7 @@
 </div>
 
 <script>
-  var source = new EventSource("http://localhost:8888/stream");
+  var source = new EventSource("http://simba.local:8888/stream");
   source.onmessage = function(event) {
     document.getElementById("logs").innerHTML += event.data + "<br>";
   };
