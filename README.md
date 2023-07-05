@@ -12,7 +12,7 @@ or manually install [python3](https://www.python.org/downloads/) and install dep
     pip install fastapi uvicorn aiofiles
 
 Create your panel HTML file for G3 within the `panels` folder,
-and specify a panel URL like `/metrics/fake.json` (or modify `metrics.py` appropriately).
+and specify a panel URL like `/metrics/fake.json` (or modify `metricshub.py` appropriately).
 For instance, a minimal panel would look like `./panels/panel.html` containing:
 
 ```html
@@ -42,7 +42,7 @@ g3.panel()
 
 Start the server:
 
-    uvicorn metrics:app --host 0.0.0.0 --reload
+    uvicorn metricshub:app --host 0.0.0.0 --reload
 
 Point your web browser at your panel:
 
@@ -70,10 +70,18 @@ you can remove the rule with
 Notes
 ---
 
+Run tests from top level as:
+
+    python -m pytest
+
 Clear local chromium cache headless:
 
     sudo rm -R /home/pi/.cache/chromium
     sudo rm -R /home/pi/.config/chromium
+
+
+
+
 
 
 

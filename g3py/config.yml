@@ -1,0 +1,21 @@
+- source: SW3-3
+  target: '@PARKING_BRAKE_SET'
+- source: SW3-2
+  target: REAR_CABIN_LIGHTS
+- source: Sw3-1
+  target: FRONT_CABIN_LIGHTS
+
+- source: ATT-BTN
+  target: '@ATTITUDE_CAGE_BUTTON'
+
+- source: fuelPressure
+  fx: x > 8
+  target: fuelWarning
+- source: oilPressure
+  fx: x > 150
+  target: oilPressureWarning
+
+- source: fuelWarning
+  target: RED_WARNING
+- source: oilPressureWarning
+  target: ORANGE_WARNING

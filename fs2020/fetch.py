@@ -38,7 +38,7 @@ dd = sc.subscribe_simdata(
     interval=10,
 )
 simvars = dd.get_units()
-latest = 0
+
 # update mapping with actual simvar units
 for m in mapping:
     if m['simvar'] in simvars:
@@ -46,7 +46,9 @@ for m in mapping:
         m['unit'] = unitmap.get(unit.lower(), unit)
     else:
         m.setdefault('unit', None)
-        print(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
+        logging.warning(f"g3py:fs2020:WARNING: No simvar for {m['simvar']}")
+
+latest = 0
 
 
 def background_task() -> None:

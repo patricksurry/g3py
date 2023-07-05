@@ -7,9 +7,15 @@ dependencies:
     - fastapi
     - fastapi_utils
     - sse-starlette
+    - aiohttp
+    - aiohttp_sse_client
+    - httpx
     - uvicorn
     - aiofiles
     - ruamel.yaml
+    - pytest
+    - pytest-asyncio
+    - pytest-xprocess
     - flake8
     - flake8-black
     - mypy
